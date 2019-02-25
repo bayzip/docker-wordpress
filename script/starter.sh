@@ -4,6 +4,12 @@
 procs=$(cat /proc/cpuinfo | grep processor | wc -l)
 sed -i -e "s/worker_processes auto/worker_processes $procs/" /etc/nginx/nginx.conf
 
+# Configuration PHP-FPM
+sed -i -e "s/max_children/$max_children/" /etc/php7/php-fpm.d/www.conf
+sed -i -e "s/min_spare_servers/$min_spare_servers/" /etc/php7/php-fpm.d/www.conf
+sed -i -e "s/max_spare_servers/$max_spare_servers/" /etc/php7/php-fpm.d/www.conf
+sed -i -e "s/start_servers/$start_servers/" /etc/php7/php-fpm.d/www.conf
+
 cd /usr/share/nginx/html/ 
 
 if [ $WORDPRESS == ON ]; then
