@@ -31,10 +31,6 @@ ENV DB_HOST wp_mariadb
 ENV SESSION ON
 ENV PREFIX_SESSION wpuser
 ENV SESSION_HOST wp_redis
-ENV max_children 5
-ENV start_servers 2
-ENV min_spare_servers 1
-ENV max_spare_servers 3
 
 RUN apk add --update nginx && \
     apk add --no-cache \
