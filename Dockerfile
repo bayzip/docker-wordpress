@@ -42,8 +42,7 @@ RUN apk add --update nginx && \
     supervisor \
     unzip \
     wget \
-    curl \
-    mysql-client && \
+    curl && \
     rm -rf /var/cache/apk/* && \
     mkdir -p /tmp/nginx/ && \
     mkdir -p /usr/share/nginx/html
