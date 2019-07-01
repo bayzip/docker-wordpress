@@ -24,9 +24,9 @@ ENV PHPMODULE="php${PHPVERSION} \
     php${PHPVERSION}-xmlrpc"
 ENV PORT_NGINX 80
 ENV WORDPRESS ON
-ENV DB_NAME wordpress
-ENV DB_USER wp_shopee
-ENV DB_PASSWORD UserShopee100@
+ENV DB_NAME dbwordpress
+ENV DB_USER wpuser_wordpress
+ENV DB_PASSWORD passWordPress
 ENV DB_HOST wp_mariadb
 ENV SESSION ON
 ENV PREFIX_SESSION wpuser
