@@ -19,15 +19,15 @@ or
 
 ### Database Configuration for Wp-Config
 ```
---env DB_NAME "wordpress"
---env DB_USER wp_shopee
---env DB_PASSWORD UserShopee100@
---env DB_HOST wp_mariadb
+--env MYSQL_ROOTPW RootPWDatabase100@
+--env MYSQL_DB wordpress
+--env MYSQL_USER userDB
+--env MYSQL_USER_PW userDBPass100@
 or
---e DB_NAME "wordpress"
---e DB_USER wp_shopee
---e DB_PASSWORD UserShopee100@
---e DB_HOST wp_mariadb
+-e MYSQL_ROOTPW RootPWDatabase100@
+-e MYSQL_DB wordpress
+-e MYSQL_USER userDB
+-e MYSQL_USER_PW userDBPass100@
 ```
 
 ### WP-Session with Redis
