@@ -1,0 +1,37 @@
+version: '3.4'
+services:
+  wp_mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=changeme
+      - MYSQL_DATABASE=db_wordpress
+      - MYSQL_USER=user_wordpress
+      - MYSQL_PASSWORD=pass_wordpress
+    volumes:
+      - /home/ubuntu/docker-volumes/wpdb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  wp_redis:
+    image: redis:alpine
+    # command: redis-server --requirepass redispass
+
+  webserver:
+    image: modinbah/wordpress_nginx
+    restart: always
+    depends_on: 
+      - wp_mariadb
+      - wp_redis
+    environment:
+      - DB_NAME=db_wordpress
+      - DB_USER=user_wordpress
+      - DB_PASSWORD=pass_wordpress
+      - DB_HOST=wp_mariadb
+      - SESSION=ON
+      - PREFIX_SESSION=wpuser
+      - SESSION_HOST=wp_redis
+    volumes:
+      - /home/ubuntu/docker-volumes/wpdata:/usr/share/nginx/html/
+    ports:
+      - "80:80"

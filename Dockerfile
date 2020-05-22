@@ -1,11 +1,11 @@
 FROM alpine:latest
-LABEL maintainer="Bayu Adin H <bayu.adin.h@mail.ugm.ac.id>"
-LABEL description="Docker with NGINX + FPM"
+LABEL maintainer="MODIN"
+LABEL description="Docker Wordpress with NGINX + FPM"
 
 ENV PHPVERSION 7
 ENV PHPMODULE="php${PHPVERSION} \
     php${PHPVERSION}-fpm \
-	php${PHPVERSION}-redis \
+    php${PHPVERSION}-redis \
     php${PHPVERSION}-opcache \
     php${PHPVERSION}-curl \
     php${PHPVERSION}-intl \
@@ -22,15 +22,7 @@ ENV PHPMODULE="php${PHPVERSION} \
     php${PHPVERSION}-soap \
     php${PHPVERSION}-xml \
     php${PHPVERSION}-xmlrpc"
-ENV PORT_NGINX 80
 ENV WORDPRESS ON
-ENV DB_NAME dbwordpress
-ENV DB_USER wpuser_wordpress
-ENV DB_PASSWORD passWordPress
-ENV DB_HOST wp_mariadb
-ENV SESSION ON
-ENV PREFIX_SESSION wpuser
-ENV SESSION_HOST wp_redis
 
 RUN apk add --update nginx && \
     apk add --no-cache \
@@ -51,6 +43,6 @@ COPY script/starter.sh /starter.sh
 COPY script/supervisord.conf /etc/supervisord.conf
 ADD https://wordpress.org/latest.zip /opt/latest.zip
 
-EXPOSE ${PORT_NGINX}/tcp
+EXPOSE 80
 
 ENTRYPOINT  ["sh", "/starter.sh"]

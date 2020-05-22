@@ -1,57 +1,52 @@
-# nginx-fpm-docker
-Docker image for NGINX + PHP-FPM based on alpine images with auto install wordpress
+# Docker Wordpress
+Docker for Wordpress build in with Nginx + PHP-FPM based on alpine images and supported with Redis session
 
-## NGINX Port
-Default Open Port is 80, if you want to change open port add to environment like this
+[![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/repository/docker/modinbah/wordpress_nginx)
+[![Docker Pulls](https://img.shields.io/docker/pulls/modinbah/wordpress_nginx.svg)]()
+[![Docker Stars](https://img.shields.io/docker/stars/modinbah/wordpress_nginx.svg)]()
+
+## Informations
+
+* Install [Docker](https://www.docker.com/)
+* Install [Docker Compose](https://docs.docker.com/compose/install/)
+* WP-Session [WP-Session](https://ethitter.com/plugins/wp-redis-user-session-storage/)
+
+## Installation
+Pull the image from the Docker repository.
 ```
---env PORT_NGINX="PORT NUMBER"
-or
--e PORT_NGINX="PORT NUMBER"
+docker pull modinbah/wordpress_nginx
 ```
 
-## Wordpress Installation
-Default for WordPress installation is on, but if you has been installed WordPress you can simply turn off this environment and skip DB configuration for WordPress.
+## Running
+You can running this wordpress using docker-compose (files provided in this repository):
 ```
---env WORDPRESS "ON/OFF"
-or
--e WORDPRESS "ON/OFF"
+docker-compose -f docker-compose.yml up -d
+```
+### Volume
+We use the volume to make data not removed after shutdown docker-compose. You can change the volume from this configuration
+```
+# DATBASE
+volume:
+  - {YOUR_PATH}:/var/lib/mysql
+    
+# WORDPRESS
+volume:
+  - {YOUR_PATH}:/usr/share/nginx/html/
 ```
 
+## Configuration
+Using the docker compose, you can easy to run using the default configuration. If you want to change it, you can follow this instruction
 ### Database Configuration for Wp-Config
 ```
---env MYSQL_ROOTPW RootPWDatabase100@
---env MYSQL_DB wordpress
---env MYSQL_USER userDB
---env MYSQL_USER_PW userDBPass100@
-or
--e MYSQL_ROOTPW RootPWDatabase100@
--e MYSQL_DB wordpress
--e MYSQL_USER userDB
--e MYSQL_USER_PW userDBPass100@
+MYSQL_ROOT_PASSWORD 
+MYSQL_DATABASE & DB_NAME
+MYSQL_USER & DB_USER
+MYSQL_PASSWORD & DB_PASSWORD
 ```
+If you want to change value, you need to change both of environment. 
 
-### WP-Session with Redis
-If you want to use session user every user login and log out to improve speed, you can simply run this environment.
-```
---env SESSION ON/OFF
---env PREFIX_SESSION wpuser
---env SESSION_HOST wp_redis
-or
---e SESSION ON/OFF
---e PREFIX_SESSION wpuser
---e SESSION_HOST wp_redis
-```
-
-## PHP Version
-Default PHP using PHP 7. If you want to change default PHP simple to add environment like this
-```
---env PHPVERSION "Version"
-or
--e PHPVERSION "Version"
-```
-
-## PHP Module
-Default Module PHP
+### PHP Module
+In this configuration, we use PHP 7 as default version and PHP Module
 - PHP FPM
 - PHP opcache
 - PHP curl
@@ -69,12 +64,16 @@ Default Module PHP
 - PHP xml
 - PHP xmlrpc
 
-If you want to change PHP Module, simple to add environment while you running container.
+If you want to change PHP Module or version, simple to add environment while you want running container from docker compose
 ```
---env PHPMODULE=php${PHPVERSION} \
---env PHPMODULE=php${PHPVERSION}-"Module"
-or
--e PHPMODULE=php${PHPVERSION} \
--e PHPMODULE=php${PHPVERSION}-"Module" 
+PHPVERSION={YOUR_VERSION}
+PHPMODULE="php${PHPVERSION} \
+  php${PHPVERSION}-fpm \
+  php${PHPVERSION}-{YOUR_MODULE}"
 ```
 
+### WP-Session with Redis
+By default, we use Redis as a session user login. If you have a concern and want to turn off, you can simply remove Redis from docker-compose, and change value to SESSION from ON to OFF.
+```
+SESSION=OFF
+```
