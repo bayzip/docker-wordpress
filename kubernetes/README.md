@@ -1,5 +1,5 @@
-## Run
-After running minikube, you can use by creating deployment and services 
+## Run with Minikube
+After running minikube using `minikube start`, you can follow this command to create network and pods. 
 
 ```shell script
 # MariaDB
@@ -15,14 +15,13 @@ kubectl create -f wordpress-deploy.yml
 kubectl create -f wordpress-services.yml
 ```
 
-After that you can akses wordpress using command
+To access it, you can use the following command
 ```shell script
 minikube service webserver --url
 ```
 
 ## Scalling
-Since this wordpress support scalling, you can alwaays change replicate or scale deploymeng using this command
-
+If you want to do scaling up/down on WordPress, you can use volume persistence to avoid inconsistency and data loss. After that, you can use this command to scale it.
 ```shell script
 # Using edit
 kubectl edit deployment webserver
