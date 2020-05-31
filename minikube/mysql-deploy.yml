@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mariadb
+  labels:
+    service: mariadb
+    apps: wordpress
+
+spec:
+  containers:
+    - name: mariadb
+      image: mariadb
+      ports:
+        - containerPort: 3306
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: changeme
+        - name: MYSQL_DATABASE
+          value: db_wordpress
+        - name: MYSQL_USER
+          value: user_wordpress
+        - name: MYSQL_PASSWORD
+          value: pass_wordpress
