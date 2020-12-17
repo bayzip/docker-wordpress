@@ -44,6 +44,8 @@ COPY config/fpm/www.conf /etc/php7/php-fpm.d/www.conf
 COPY config/session.php /opt/session.php
 COPY script/starter.sh /starter.sh
 COPY script/supervisord.conf /etc/supervisord.conf
+COPY wp-config.php /opt/wp-config.php
+
 ADD https://wordpress.org/latest.zip /opt/latest.zip
 
 EXPOSE 80
