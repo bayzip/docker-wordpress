@@ -28,12 +28,15 @@ RUN apk add --update nginx && \
     apk add --no-cache \
     ${PHPMODULE} \
     supervisor \
-    unzip \
-    wget \
-    curl && \
+    unzip wget  curl && \
     rm -rf /var/cache/apk/* && \
     mkdir -p /tmp/nginx/ && \
     mkdir -p /usr/share/nginx/html
+
+RUN curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer
+
+RUN composer require opencensus/opencensus
 
 COPY config/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
