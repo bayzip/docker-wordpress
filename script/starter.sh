@@ -16,7 +16,7 @@ if [ $WORDPRESS == ON ]; then
         unzip latest.zip
         mv wordpress/* .
         rm -rf wordpress
-        cp /usr/share/nginx/html/wp-config-sample.php /usr/share/nginx/html/wp-config.php
+        cp /opt/wp-config.php /usr/share/nginx/html/wp-config.php
         sed -i "s/database_name_here/$DB_NAME/" /usr/share/nginx/html/wp-config.php
         sed -i "s/username_here/$DB_USER/" /usr/share/nginx/html/wp-config.php
         sed -i "s/password_here/$DB_PASSWORD/" /usr/share/nginx/html/wp-config.php

@@ -1,34 +1,19 @@
-## Run with Minikube
-After running minikube using `minikube start`, you can follow this command to create network and pods. 
+# Descreption
+In this example, we will deploy wordpress by using Linode kubernetes. We use g6-standard-1 instance with 2 GB/1 Core in this example.
 
-```shell script
-# MariaDB
-kubectl create -f mysql-deploy.yml
-kubectl create -f mysql-services.yml
+## Componen
+First thing first, we need to install this component first. 
+- Nginx: https://kubernetes.github.io/ingress-nginx/deploy/
+- Metric Server "Don't forget add --kubelet-insecure-tls and use internal comunication"
+- LinkerD: https://linkerd.io/2/getting-started/
 
-# Redis (Only if you activated session)
-kubectl create -f redis-deploy.yml
-kubectl create -f mysql-services.yml
+## WordPress
+1. Namespace: wordpress
+2. Persisntence volume in: /usr/share/nginx/html/
 
-# Nginx + PHP FPM include WordPress
-kubectl create -f wordpress-deploy.yml
-kubectl create -f wordpress-services.yml
-```
+Note: Cause we don't use NFS, so we can't scale it. 
 
-To access it, you can use the following command
-```shell script
-minikube service webserver --url
-```
-
-## Scalling
-If you want to do scaling up/down on WordPress, you can use volume persistence to avoid inconsistency and data loss. After that, you can use this command to scale it.
-```shell script
-# Using edit
-kubectl edit deployment webserver
-
-# Change replicate from file and apply
-kubectl apply -f wordpress-deploy.yml
-
-# Using scale option
-kubecl scale deployment.v1.apps/webserver --replicas=xxxx
-```
+## Database - MariaDB
+1. Namespace: database
+2. Type: steteful
+3. Persisntence volume in: /var/lib/mysql

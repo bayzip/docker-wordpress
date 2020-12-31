@@ -39,10 +39,9 @@ COPY config/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY config/fpm/www.conf /etc/php7/php-fpm.d/www.conf
 COPY config/session.php /opt/session.php
+COPY config/wordpress/wp-config.php /opt/wp-config.php
 COPY script/starter.sh /starter.sh
 COPY script/supervisord.conf /etc/supervisord.conf
 ADD https://wordpress.org/latest.zip /opt/latest.zip
-
-EXPOSE 80
 
 ENTRYPOINT  ["sh", "/starter.sh"]
