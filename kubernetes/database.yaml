@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-read
+  namespace: wordpress
+  labels:
+    service: mariadb-services
+    apps: wordpress
+spec:
+  selector:
+    service: mariadb
+    apps: wordpress
+  ports:
+    - port: 3306
+      targetPort: 3306
+---
+# Headles Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  namespace: wordpress
+  labels:
+    service: mariadb-services
+    apps: wordpress
+spec:
+  selector:
+    service: mariadb
+    apps: wordpress
+  ports:
+    - port: 3306
+      targetPort: 3306
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: deploy-mariadb
+  namespace: wordpress
+spec:
+  serviceName: "mariadb"
+  replicas: 1
+  selector:
+    matchLabels:
+      service: mariadb
+      apps: wordpress
+  template:
+    metadata:
+      name: mariadb
+      namespace: wordpress
+      labels:
+        service: mariadb
+        apps: wordpress
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb
+          ports:
+            - containerPort: 3306
+          envFrom:
+          - secretRef:
+              name: wordpress-secret
+          volumeMounts:
+          - name: pvc-database
+            mountPath: "/var/lib/mysql"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: beta.kubernetes.io/instance-type
+                operator: In
+                values:
+                - g6-standard-2
+  volumeClaimTemplates:
+  - metadata:
+      name: pvc-database
+      namespace: wordpress
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: linode-block-storage
+      resources:
+        requests:
+          storage: 10Gi

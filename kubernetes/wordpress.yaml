@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-wordpress
+  namespace: wordpress
+  annotations:
+    linkerd.io/inject: enabled
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      webserver: nginx
+      apps: wordpress
+  template:
+      metadata:
+        name: wordpress
+        labels:
+          webserver: nginx
+          apps: wordpress
+      spec:
+        containers:
+          - name: wordpress
+            image: modinbah/wordpress_nginx
+            ports:
+              - containerPort: 80
+            env:
+              - name: DB_HOST
+                valueFrom: 
+                  configMapKeyRef:
+                    name: wordpress-config
+                    key: DB_Host
+              - name: DB_NAME
+                valueFrom: 
+                  secretKeyRef:
+                    name: wordpress-secret
+                    key: MYSQL_DATABASE
+              - name: DB_USER
+                valueFrom: 
+                  secretKeyRef:
+                    name: wordpress-secret
+                    key: MYSQL_USER
+              - name: DB_PASSWORD
+                valueFrom: 
+                  secretKeyRef:
+                    name: wordpress-secret
+                    key: MYSQL_PASSWORD
+              - name: SESSION
+                valueFrom: 
+                  configMapKeyRef:
+                    name: wordpress-config
+                    key: SESSION
+              - name: PREFIX_SESSION
+                valueFrom: 
+                  configMapKeyRef:
+                    name: wordpress-config
+                    key: PREFIX_SESSION
+              - name: SESSION_HOST
+                valueFrom: 
+                  configMapKeyRef:
+                    name: wordpress-config
+                    key: SESSION_HOST
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: beta.kubernetes.io/instance-type
+                  operator: In
+                  values:
+                  - g6-standard-1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-wordpress
+  namespace: wordpress
+  labels:
+    service: nginx-services
+    apps: wordpress
+spec:
+  selector:
+    webserver: nginx
+    apps: wordpress
+  ports:
+    - port: 80
+      targetPort: 80
+# ---
+# apiVersion: autoscaling/v2beta2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: wordpress-hpa
+#   namespace: wordpress
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: deploy-wordpress
+#   minReplicas: 1
+#   maxReplicas: 10
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       target:
+#         type: Utilization
+#         averageUtilization: 50
